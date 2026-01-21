@@ -41,7 +41,6 @@ A Helm chart for Kubernetes
 | externalSecrets.backend-parameters.data[0].remoteRef.key | string | `"krci-cmtr-0oqfemca-backend-parameters"` |  |
 | externalSecrets.backend-parameters.data[0].remoteRef.property | string | `"backend-parameters.ENV_VAR5"` |  |
 | externalSecrets.backend-parameters.data[0].secretKey | string | `"ENV_VAR5"` |  |
-| externalSecrets.backend-parameters.data[1].remoteRef.decodingStrategy | string | `"Base64"` |  |
 | externalSecrets.backend-parameters.data[1].remoteRef.key | string | `"krci-cmtr-0oqfemca-backend-parameters"` |  |
 | externalSecrets.backend-parameters.data[1].remoteRef.property | string | `"backend-parameters.config"` |  |
 | externalSecrets.backend-parameters.data[1].secretKey | string | `"application.secret.properties.from.ps"` |  |
@@ -51,7 +50,8 @@ A Helm chart for Kubernetes
 | image.tag | string | `""` |  |
 | imagePullSecrets[0].name | string | `"regcred"` |  |
 | ingress.annotations | object | `{}` |  |
-| ingress.className | string | `""` |  |
+| ingress.className | string | `"nginx"` |  |
+| ingress.dnsWildcard | string | `"development.krci-dev.cloudmentor.academy"` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.hosts[0].host | string | `"edpDefault"` |  |
 | ingress.hosts[0].paths[0].path | string | `"/"` |  |

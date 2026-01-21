@@ -10,6 +10,17 @@ image:
   # -- Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+secrets:
+  secret-extra-env:
+    stringData:
+      ENV_VAR2: "value2"
+      ENV_VAR3: "value3"
+  secret-extra-config:  # <--- Fixed Name (Was missing in your snippets)
+    stringData:
+      ENV_VAR4: "value4"
+      application.secret.properties: |
+        secret.key=123456
+
 imagePullSecrets:
 # Define secret to pull images. Secret can be provisioned by edp-install or manually.
   - name: regcred
@@ -120,6 +131,18 @@ tolerations: []
 
 # -- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
+
+configMaps:
+  cm-extra-env:
+    data:
+      SERVER_PORT: "8080"
+      LOGGING_LEVEL_ROOT: "INFO"
+  cm-extra-config:
+    data:
+      ENV_VAR1: "value1"
+      application.properties: |
+        server.port=8080
+        logging.level.root=INFO
 
 envFrom:
   - configMapRef:

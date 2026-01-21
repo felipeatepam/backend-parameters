@@ -36,16 +36,20 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          # --- ADDED: EnvFrom Block ---
+
+          # --- AUTOMATION: ENVIRONMENT VARIABLES ---
+          # 1. Load entire ConfigMaps/Secrets as env vars
           {{- with .Values.envFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          # --- ADDED: Env Block ---
+
+          # 2. Load specific env vars (including valueFrom references)
           {{- with .Values.env }}
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -56,14 +60,19 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
+          # --- AUTOMATION: VOLUME MOUNTS ---
           {{- with .Values.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+
+      # --- AUTOMATION: VOLUMES ---
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -25,6 +25,10 @@ A Helm chart for Kubernetes
 | autoscaling.maxReplicas | int | `100` |  |
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| configMaps.cm-extra-config.data."application.properties" | string | `"server.port=8080\nlogging.level.root=INFO\n"` |  |
+| configMaps.cm-extra-config.data.ENV_VAR1 | string | `"value1"` |  |
+| configMaps.cm-extra-env.data.LOGGING_LEVEL_ROOT | string | `"INFO"` |  |
+| configMaps.cm-extra-env.data.SERVER_PORT | string | `"8080"` |  |
 | envFrom[0].configMapRef.name | string | `"cm-extra-env"` |  |
 | envFrom[1].secretRef.name | string | `"secret-extra-env"` |  |
 | env[0].name | string | `"BACKEND_PROFILES_ACTIVE"` |  |
@@ -58,6 +62,10 @@ A Helm chart for Kubernetes
 | readinessProbe.tcpSocket.port | string | `"http"` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
+| secrets.secret-extra-config.stringData."application.secret.properties" | string | `"secret.key=123456\n"` |  |
+| secrets.secret-extra-config.stringData.ENV_VAR4 | string | `"value4"` |  |
+| secrets.secret-extra-env.stringData.ENV_VAR2 | string | `"value2"` |  |
+| secrets.secret-extra-env.stringData.ENV_VAR3 | string | `"value3"` |  |
 | securityContext | object | `{}` |  |
 | service.port | int | `8080` |  |
 | service.type | string | `"ClusterIP"` |  |

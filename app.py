@@ -4,34 +4,34 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-def read_file_content(path: str) -> str:
-    """Lee el contenido de un archivo si existe, de lo contrario devuelve un error."""
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            return f.read()
-    return f"Error: File not found at {path}"
-
 @app.get("/env")
-def get_environment_variables():
-    """
-    Devuelve todas las variables de entorno, incluyendo las extraídas
-    de ConfigMap y Secret según las rutas especificadas.
-    """
-    # 1. Obtener todas las variables del sistema
+def read_env():
+    """Returns all environment variables and specific config files."""
+    # 1. Start with the current system environment variables (Includes ENV_VAR5)
     env_vars = dict(os.environ)
 
-    # 2. Agregar variables específicas desde los volúmenes
-    env_vars["application.properties.from.configmap"] = read_file_content("/config/application.properties")
-    env_vars["application.secret.properties.from.secret"] = read_file_content("/secret-config/application.secret.properties")
+    # Helper function to safely read files
+    def read_file(path):
+        if os.path.exists(path):
+            with open(path, "r") as f:
+                return f.read().strip()
+        return "File not found"
+
+    # 2. Read ConfigMap file
+    env_vars["application.properties.from.configmap"] = read_file("/config/application.properties")
+
+    # 3. Read Standard Secret file
+    env_vars["application.secret.properties.from.secret"] = read_file("/secret-config/application.secret.properties")
+
+    # 4. Read AWS Parameter Store Secret file (NEW)
+    env_vars["application.secret.properties.from.ps"] = read_file("/ps-config/application.secret.properties.from.ps")
 
     return env_vars
 
 @app.get("/")
 def read_root():
-    """Returns Hello World."""
     return {"Hello": "World"}
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, item_count: Union[str, None] = None):
-    """Returns numbers of items."""
     return {"item_id": item_id, "q": item_count}

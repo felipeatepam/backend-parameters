@@ -36,7 +36,8 @@ externalSecrets:
         remoteRef:
           key: krci-cmtr-0oqfemca-backend-parameters
           property: backend-parameters.config
-          decodingStrategy: Base64
+          # [SEGURIDAD] Comentado para evitar errores si el dato en AWS es texto plano
+          # decodingStrategy: Base64
 
 # --- 4. Standard ConfigMaps & Secrets (Manual) ---
 configMaps:
@@ -122,14 +123,22 @@ service:
   type: ClusterIP
   port: 8080
 
+# --- INGRESS RESTAURADO Y CORREGIDO ---
 ingress:
   enabled: true
-  className: ""
+  # Restaurado: Variable necesaria para que 'edpDefault' construya la URL
+  dnsWildcard: development.krci-dev.cloudmentor.academy
+
+  # [FIX CRÍTICO] Cambiado de "" a "nginx". Si se deja vacío, K8s ignora el recurso.
+  className: "nginx"
+
   annotations: {}
   hosts:
     - host: edpDefault
       paths:
         - path: /
+          # ImplementationSpecific está bien, pero 'Prefix' es más estándar en v1.
+          # Lo dejo como en tu versión original para no romper compatibilidad.
           pathType: ImplementationSpecific
   tls: []
 

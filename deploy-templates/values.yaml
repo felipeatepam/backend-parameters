@@ -90,17 +90,27 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+volumes:
+  - name: secret-volume
+    secret:
+      secretName: secret-extra-config
+      items:
+        - key: application.secret.properties
+          path: application.secret.properties
+  - name: configmap-volume
+    configMap:
+      name: cm-extra-config
+      items:
+        - key: application.properties
+          path: application.properties
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+volumeMounts:
+  - name: secret-volume
+    readOnly: true
+    mountPath: /secret-config
+  - name: configmap-volume
+    readOnly: true
+    mountPath: /config
 
 # -- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
 nodeSelector: {}
@@ -110,3 +120,23 @@ tolerations: []
 
 # -- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
+
+envFrom:
+  - configMapRef:
+      name: cm-extra-env
+  - secretRef:
+      name: secret-extra-env
+
+env:
+  - name: BACKEND_PROFILES_ACTIVE
+    value: dev
+  - name: ENV_VAR1
+    valueFrom:
+      configMapKeyRef:
+        name: cm-extra-config
+        key: ENV_VAR1
+  - name: ENV_VAR4
+    valueFrom:
+      secretKeyRef:
+        name: secret-extra-config
+        key: ENV_VAR4
